@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FISDAS - Medan Magnet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #fff;
+        }
+        
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            z-index: 10;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(78, 115, 223, 0.7);
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.postimg.cc/bvCzCRdZ/magnetic-field-bg.jpg') center/cover;
+            opacity: 0.2;
+        }
+        
+        .magnetic-field {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .sim-button {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #7b42f6 0%, #b01eff 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sim-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(123, 66, 246, 0.3);
+        }
+        
+        .features {
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #fff;
+        }
+        
+        .feature-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 0 2rem;
+        }
+        
+        .card {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(78, 115, 223, 0.2);
+            border-color: rgba(123, 66, 246, 0.5);
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        
+        .card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        @keyframes floatEffect {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        .magnetic-field canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .light-bulb {
+            margin-left: 5px;
+            font-size: 1.2rem;
+        }
+        
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">FISDAS</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#kelompok">Kelompok</a>
+            <a href="#hitung">Hitung</a>
+        </div>
+    </nav>
+    
+    <div class="hero" id="home">
+        <div id="particles-js"></div>
+        <div class="magnetic-field">
+            <canvas id="magneticField"></canvas>
+        </div>
+        <h1>MEDAN MAGNET</h1>
+        <button class="sim-button">Simulasi <span class="light-bulb">💡</span></button>
+    </div>
+    
+    <section class="features">
+        <h2>Fitur Utama</h2>
+        <div class="feature-cards">
+            <div class="card">
+                <h3>Alat Hitung</h3>
+                <p>Memudahkan penghitung medan magnet secara cepat dan tepat.</p>
+            </div>
+            <div class="card">
+                <h3>Simulasi Medan</h3>
+                <p>Simulasi berbagai jenis medan magnet untuk pemahaman lebih baik.</p>
+            </div>
+            <div class="card">
+                <h3>Informasi</h3>
+                <p>Informasi yang berisi terdiri dari tentang kelompok kami.</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Magnetic Field Animation
+        const canvas = document.getElementById('magneticField');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Particle settings
+        const particles = [];
+        const particleCount = 100;
+        const maxRadius = 1;
+        const maxSpeed = 1;
+        
+        // Create particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * maxRadius + 0.1,
+                speedX: (Math.random() - 0.5) * maxSpeed,
+                speedY: (Math.random() - 0.5) * maxSpeed,
+                color: `hsl(${Math.random() * 60 + 240}, 80%, 50%)`,
+                alpha: Math.random() * 0.5 + 0.5
+            });
+        }
+        
+        // Magnetic field lines
+        const fieldLines = [];
+        const fieldLineCount = 8;
+        
+        for (let i = 0; i < fieldLineCount; i++) {
+            fieldLines.push({
+                startX: Math.random() * canvas.width,
+                startY: Math.random() * canvas.height,
+                length: Math.random() * 200 + 100,
+                angle: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.002 + 0.001,
+                color: `hsl(${Math.random() * 60 + 240}, 80%, 50%)`,
+                width: Math.random() * 2 + 1
+            });
+        }
+        
+        function drawMagneticField() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw field lines
+            for (const line of fieldLines) {
+                line.angle += line.speed;
+                
+                ctx.strokeStyle = line.color;
+                ctx.lineWidth = line.width;
+                ctx.beginPath();
+                
+                for (let t = 0; t < 100; t++) {
+                    const x = line.startX + Math.cos(line.angle + t / 10) * t * 3;
+                    const y = line.startY + Math.sin(line.angle + t / 10) * t * 2;
+                    
+                    if (t === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                    
+                    if (t * 3 > line.length) break;
+                }
+                
+                ctx.stroke();
+                
+                // Reset position if out of bounds
+                if (line.startX < -100 || line.startX > canvas.width + 100 ||
+                    line.startY < -100 || line.startY > canvas.height + 100) {
+                    line.startX = Math.random() * canvas.width;
+                    line.startY = Math.random() * canvas.height;
+                }
+            }
+            
+            // Draw and update particles
+            for (const particle of particles) {
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
+                ctx.globalAlpha = particle.alpha;
+                ctx.fill();
+                
+                // Update position
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                
+                // Wrap around
+                if (particle.x < 0) particle.x = canvas.width;
+                if (particle.x > canvas.width) particle.x = 0;
+                if (particle.y < 0) particle.y = canvas.height;
+                if (particle.y > canvas.height) particle.y = 0;
+            }
+            
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(drawMagneticField);
+        }
+        
+        drawMagneticField();
+        
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 40,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": ["#7b42f6", "#b01eff", "#4e73df"]
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#7b42f6",
+                    "opacity": 0.2,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 0.5
+                        }
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+        
+        // Button hover animation
+        const simButton = document.querySelector('.sim-button');
+        simButton.addEventListener('mouseover', () => {
+            simButton.style.boxShadow = '0 0 20px rgba(123, 66, 246, 0.7)';
+        });
+        
+        simButton.addEventListener('mouseout', () => {
+            simButton.style.boxShadow = '0 10px 20px rgba(123, 66, 246, 0.3)';
+        });
+
+        // Modal functionality for simulation button
+        simButton.addEventListener('click', () => {
+            alert('Fitur simulasi akan segera hadir!');
+        });
+    </script>
+</body>
+</html>
