@@ -209,4 +209,291 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     simButton.addEventListener('mouseout', () => {
-        simButton.style.boxShadow = ' 
+        simButton.style.boxShadow = '0 0 10px rgba(123, 66, 246, 0.4)';
+    });
+    
+    // Click effect
+    simButton.addEventListener('click', () => {
+        // Add pulse animation
+        simButton.classList.add('pulse-animation');
+        
+        // Create ripple effect
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        simButton.appendChild(ripple);
+        
+        // Position the ripple where clicked
+        const rect = simButton.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = `${size}px`;
+        
+        // Remove ripple after animation completes
+        setTimeout(() => {
+            ripple.remove();
+            simButton.classList.remove('pulse-animation');
+        }, 600);
+        
+        // Toggle simulation state
+        toggleSimulation();
+    });
+    
+    // Add necessary CSS for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+        .sim-button {
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+            background: linear-gradient(135deg, #7b42f6 0%, #b01eff 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(123, 66, 246, 0.4);
+        }
+        
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 0.4s ease-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+
+// Simulation control
+let simulationRunning = true;
+
+function toggleSimulation() {
+    simulationRunning = !simulationRunning;
+    
+    if (simulationRunning) {
+        // Resume animation
+        requestAnimationFrame(drawMagneticField);
+        document.querySelector('.sim-button').textContent = 'Pause Simulation';
+    } else {
+        // Stop animation (it will stop at next frame)
+        document.querySelector('.sim-button').textContent = 'Start Simulation';
+    }
+}
+
+// Add magnetic field strength control
+document.addEventListener('DOMContentLoaded', function() {
+    // Create slider container
+    const controlPanel = document.createElement('div');
+    controlPanel.className = 'control-panel';
+    controlPanel.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px;
+        border-radius: 10px;
+        color: white;
+        z-index: 1000;
+    `;
+    
+    // Create field strength slider
+    const sliderContainer = document.createElement('div');
+    sliderContainer.innerHTML = `
+        <label for="fieldStrength">Field Strength</label>
+        <input type="range" id="fieldStrength" min="1" max="10" value="5" class="slider">
+        <span id="strengthValue">5</span>
+    `;
+    
+    // Create particle speed slider
+    const speedSlider = document.createElement('div');
+    speedSlider.innerHTML = `
+        <label for="particleSpeed">Particle Speed</label>
+        <input type="range" id="particleSpeed" min="1" max="10" value="5" class="slider">
+        <span id="speedValue">5</span>
+    `;
+    
+    // Add styles for sliders
+    const sliderStyle = document.createElement('style');
+    sliderStyle.textContent = `
+        .slider {
+            width: 150px;
+            margin: 10px 0;
+            -webkit-appearance: none;
+            height: 5px;
+            border-radius: 5px;
+            background: #4e73df;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #b01eff;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(176, 30, 255, 0.7);
+        }
+        
+        .control-panel label {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    `;
+    
+    document.head.appendChild(sliderStyle);
+    controlPanel.appendChild(sliderContainer);
+    controlPanel.appendChild(speedSlider);
+    document.body.appendChild(controlPanel);
+    
+    // Add functionality to sliders
+    const fieldStrengthSlider = document.getElementById('fieldStrength');
+    const strengthValue = document.getElementById('strengthValue');
+    
+    fieldStrengthSlider.addEventListener('input', function() {
+        const value = this.value;
+        strengthValue.textContent = value;
+        
+        // Update field line properties
+        fieldLines.forEach(line => {
+            line.width = value / 5 * 2 + 0.5;
+            line.speed = value / 5000 + 0.001;
+        });
+    });
+    
+    const particleSpeedSlider = document.getElementById('particleSpeed');
+    const speedValue = document.getElementById('speedValue');
+    
+    particleSpeedSlider.addEventListener('input', function() {
+        const value = this.value;
+        speedValue.textContent = value;
+        
+        // Update particle speeds
+        const speedFactor = value / 5;
+        particles.forEach(particle => {
+            particle.speedX = particle.speedX * speedFactor;
+            particle.speedY = particle.speedY * speedFactor;
+        });
+    });
+});
+
+// Add info button and popup
+document.addEventListener('DOMContentLoaded', function() {
+    // Create info button
+    const infoButton = document.createElement('button');
+    infoButton.className = 'info-button';
+    infoButton.innerHTML = 'i';
+    infoButton.style.cssText = `
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7b42f6 0%, #b01eff 100%);
+        color: white;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(123, 66, 246, 0.4);
+        z-index: 1000;
+    `;
+    
+    // Create info popup
+    const infoPopup = document.createElement('div');
+    infoPopup.className = 'info-popup';
+    infoPopup.style.cssText = `
+        display: none;
+        position: absolute;
+        bottom: 70px;
+        right: 20px;
+        width: 300px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        z-index: 1000;
+    `;
+    
+    infoPopup.innerHTML = `
+        <h3>Magnetic Field Simulation</h3>
+        <p>This interactive simulation visualizes magnetic field lines and charged particles moving within the field.</p>
+        <p>Use the controls to adjust field strength and particle speed.</p>
+        <p>Click and drag to interact with particles.</p>
+        <p>Click the button below to toggle the simulation on/off.</p>
+    `;
+    
+    // Add toggle functionality
+    infoButton.addEventListener('click', () => {
+        if (infoPopup.style.display === 'none') {
+            infoPopup.style.display = 'block';
+            infoButton.style.boxShadow = '0 0 20px rgba(123, 66, 246, 0.7)';
+        } else {
+            infoPopup.style.display = 'none';
+            infoButton.style.boxShadow = '0 0 10px rgba(123, 66, 246, 0.4)';
+        }
+    });
+    
+    document.body.appendChild(infoButton);
+    document.body.appendChild(infoPopup);
+});
+
+// Add fullscreen functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const fullscreenButton = document.createElement('button');
+    fullscreenButton.className = 'fullscreen-button';
+    fullscreenButton.innerHTML = '⛶';
+    fullscreenButton.style.cssText = `
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7b42f6 0%, #b01eff 100%);
+        color: white;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(123, 66, 246, 0.4);
+        z-index: 1000;
+    `;
+    
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            fullscreenButton.innerHTML = '⤓';
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                fullscreenButton.innerHTML = '⛶';
+            }
+        }
+    });
+    
+    document.body.appendChild(fullscreenButton);
+});
