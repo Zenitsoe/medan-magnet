@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FISDAS - Simulasi Medan Magnet</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        
+        .content-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .explanation {
+            background-color: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .explanation p {
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .key-concept {
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .concept-card {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(78, 115, 223, 0.2);
+            border-color: rgba(123, 66, 246, 0.5);
+        }
+
+        .concept-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .concept-card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .see-more {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #7b42f6;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background-color: rgba(123, 66, 246, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .see-more:hover {
+            background-color: rgba(123, 66, 246, 0.2);
+        }
+
+        /* Calculator area */
+        .calculator-container {
+            background-color: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            color: #ccc;
+        }
+
+        .input-group input {
+            padding: 0.8rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #7b42f6 0%, #b01eff 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(123, 66, 246, 0.3);
+        }
+
+        .result {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #7b42f6;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-content {
+            background-color: #1e1e32;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 5px 30px rgba(123, 66, 246, 0.3);
+            position: relative;
+            animation: slideDown 0.4s ease;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close:hover {
+            color: #fff;
+        }
+        .modal h2 {
+            color: #fff;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        .modal-image {
+            display: block;
+            margin: 1rem auto;
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+        .modal-info {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        .formula {
+            background-color: rgba(123, 66, 246, 0.2);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #b01eff;
+        }
+        .checklist {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .checklist p {
+            margin: 8px 0;
+        }
+        .close-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #7b42f6 0%, #b01eff 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .close-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(123, 66, 246, 0.3);
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="logo">FISDAS</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="kelompok.html">Kelompok</a>
+            <a href="#hitung">Hitung</a>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div id="particles-js"></div>
+
+        <h1 class="section-title">
+            <span style="color: #b01eff;">ᗰ</span> Simulasi Medan Magnet
+        </h1>
+        <p>Belajar Fisika Lebih Seru dengan Visual & Interaktif</p>
+
+        <div class="explanation">
+            <h2 class="section-title" style="font-size: 1.5rem;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; background-color: #4e73df; border-radius: 50%; font-size: 1rem; margin-right: 0.5rem;">i</span>
+                Penjelasan Singkat
+            </h2>
+            <p>Dalam fisika, <a href="#" style="color: #b01eff; text-decoration: none;">medan magnet (B)</a> adalah kuantitas fisika yang menghasilkan gaya pada benda bermuatan yang bergerak dan pada arus listrik. Medan magnet muncul di sekitar bahan magnetik dan konduktor yang dialiri listrik. Secara matematis, medan magnet dirumuskan sebagai: <strong>B = μI / (2πr)</strong> untuk kawat lurus panjang.</p>
+            <p>Website ini membantu kita memahami konsep ini melalui penjelasan dan simulasi langsung.</p>
+        </div>
+
+        <div class="key-concept">
+            <div class="concept-card">
+                <h3>
+                    <span style="color: #b01eff; font-size: 1.5rem;">ᗰ</span>
+                    Medan Magnet (B)
+                </h3>
+                <p>Besaran vektor yang menunjukkan kekuatan dan arah medan magnet di suatu titik. Diukur dalam Tesla (T) atau Weber per meter persegi (Wb/m²).</p>
+                <a href="#" class="see-more">Lihat Penjelasan Lengkap</a>
+            </div>
+            <div class="concept-card">
+                <h3>
+                    <span style="color: #4e73df; font-size: 1.5rem;">I</span>
+                    Arus Listrik (I)
+                </h3>
+                <p>Aliran muatan listrik (elektron) dalam konduktor yang menghasilkan medan magnet di sekitarnya. Arah medan magnet dapat ditentukan dengan kaidah tangan kanan.</p>
+                <a href="#" class="see-more">Lihat Penjelasan Lengkap</a>
+            </div>
+            <div class="concept-card">
+                <h3>
+                    <span style="color: #f6c742; font-size: 1.5rem;">r</span>
+                    Jarak (r)
+                </h3>
+                <p>Jarak dari konduktor (kawat) ke titik yang ingin dihitung kuat medan magnetnya. Semakin jauh jarak, semakin lemah medan magnet yang dihasilkan.</p>
+                <a href="#" class="see-more">Lihat Penjelasan Lengkap</a>
+            </div>
+        </div>
+
+        <div class="calculator-container" id="hitung">
+            <h2 class="section-title" style="font-size: 1.5rem;">
+                <span style="color: #b01eff;">🧮</span> Kalkulator Interaktif
+            </h2>
+            <p style="color: #ccc; margin-bottom: 1.5rem;">Masukkan nilai Arus Listrik (I) dan Jarak (r), lalu klik tombol di bawah untuk menghitung Medan Magnet (B). Medan magnet akan semakin kuat dengan meningkatnya arus listrik.</p>
+            
+            <div class="calculator-form">
+                <div class="input-group">
+                    <label for="current">Arus Listrik (I) dalam Ampere</label>
+                    <input type="number" id="current" value="10" min="0" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="distance">Jarak (r) dalam meter</label>
+                    <input type="number" id="distance" value="5.01" min="0.01" step="0.01">
+                </div>
+            </div>
+            
+            <button id="calculateField" class="calculate-btn">Hitung Medan Magnet</button>
+            
+            <div class="result">
+                <span>Kuat Medan Magnet:</span>
+                <span class="result-value" id="resultValue">B = 3.992016e-7 Tesla</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Calculator functionality
+        const currentInput = document.getElementById('current');
+        const distanceInput = document.getElementById('distance');
+        const calculateButton = document.getElementById('calculateField');
+        const resultValue = document.getElementById('resultValue');
+        
+        calculateButton.addEventListener('click', function() {
+            const current = parseFloat(currentInput.value);
+            const distance = parseFloat(distanceInput.value);
+            const mu = 4 * Math.PI * 1e-7; // Permeabilitas ruang hampa
+            
+            if (isNaN(current) || isNaN(distance) || distance <= 0 || current < 0) {
+                alert('Masukkan nilai yang valid untuk arus dan jarak.');
+                return;
+            }
+            
+            const B = (mu * current) / (2 * Math.PI * distance);
+            resultValue.textContent = `B = ${B.toExponential(6)} Tesla`;
+        });
+        
+        // Initialize particles.js
+        window.addEventListener('load', function() {
+            // Initialize particles.js
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 30,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": ["#7b42f6", "#b01eff", "#4e73df"]
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                    },
+                    "opacity": {
+                        "value": 0.3,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 2,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#7b42f6",
+                        "opacity": 0.2,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 1,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": true,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 0.5
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+const closeElements = document.querySelectorAll('.close, .close-btn');
+    
+    // Add close event to all close buttons
+    closeElements.forEach(element => {
+        element.addEventListener('click', function() {
+            modalMedanMagnet.style.display = 'none';
+            modalArusListrik.style.display = 'none';
+            modalJarak.style.display = 'none';
+        });
+    });
+
+    // Click outside to close
+    window.addEventListener('click', function(event) {
+        if (event.target === modalMedanMagnet) {
+            modalMedanMagnet.style.display = 'none';
+        }
+        if (event.target === modalArusListrik) {
+            modalArusListrik.style.display = 'none';
+        }
+        if (event.target === modalJarak) {
+            modalJarak.style.display = 'none';
+        }
+    });
+    </script>
+    <div id="modalMedanMagnet" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Medan Magnet (Tesla)</h2>
+        <img src="/api/placeholder/400/320" alt="Medan Magnet Ilustrasi" class="modal-image">
+        
+        <div class="modal-info">
+            <p>🧲 Medan magnet adalah daerah di sekitar magnet atau arus listrik yang dapat menimbulkan gaya pada benda bermuatan yang bergerak atau pada arus listrik lain.</p>
+            
+            <p>Dalam hukum Biot-Savart, medan magnet dilambaangkan sebagai huruf <strong>B</strong> dan punya satuan <strong>Tesla (T)</strong>. Rumus untuk mencari medan magnet pada kawat lurus:</p>
+            
+            <div class="formula">B = (μ₀ × I) / (2π × r)</div>
+            
+            <div class="checklist">
+                <p>✓ B adalah Medan Magnet dalam Tesla</p>
+                <p>✓ μ₀ adalah permeabilitas ruang hampa (4π × 10⁻⁷ T·m/A)</p>
+                <p>✓ I adalah Arus dalam Ampere</p>
+                <p>✓ r adalah Jarak dalam meter</p>
+            </div>
+            
+            <p>Medan magnet penting banget, karena tanpa medan magnet, tidak akan ada gaya yang membuat benda bermuatan terpengaruh. Sama seperti manusia butuh motivasi, rangkaian magnetik butuh medan magnet buat "bergerak". 😊</p>
+        </div>
+        
+        <button class="close-btn">Tutup</button>
+    </div>
+</div>
+
+<div id="modalArusListrik" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Arus Listrik (Ampere)</h2>
+        <img src="/api/placeholder/400/320" alt="Arus Listrik Ilustrasi" class="modal-image">
+        
+        <div class="modal-info">
+            <p>⚡ Arus listrik adalah aliran muatan listrik (elektron) yang mengalir melalui suatu penghantar.</p>
+            
+            <p>Dalam hukum Biot-Savart, arus listrik dilambangkan sebagai huruf <strong>I</strong> dan punya satuan <strong>Ampere (A)</strong>. Arus listrik menghasilkan medan magnet di sekitarnya:</p>
+            
+            <div class="formula">I = V / R</div>
+            
+            <div class="checklist">
+                <p>✓ I adalah Arus dalam Ampere</p>
+                <p>✓ V adalah Tegangan dalam Volt</p>
+                <p>✓ R adalah Hambatan dalam Ohm</p>
+            </div>
+            
+            <p>Arus listrik sangat penting dalam pembentukan medan magnet. Kaidah tangan kanan dapat digunakan untuk menentukan arah medan magnet yang dihasilkan oleh arus listrik. Jika jempol menunjukkan arah arus, maka jari yang menggenggam menunjukkan arah medan magnet.</p>
+        </div>
+        
+        <button class="close-btn">Tutup</button>
+    </div>
+</div>
+
+<div id="modalJarak" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Jarak (meter)</h2>
+        <img src="/api/placeholder/400/320" alt="Jarak Ilustrasi" class="modal-image">
+        
+        <div class="modal-info">
+            <p>📏 Jarak adalah ukuran spasial antara dua titik, dalam hal ini jarak dari kawat berarus ke titik pengamatan medan magnet.</p>
+            
+            <p>Dalam hukum Biot-Savart, jarak dilambangkan sebagai huruf <strong>r</strong> dan punya satuan <strong>meter (m)</strong>. Jarak berbanding terbalik dengan kuat medan magnet:</p>
+            
+            <div class="formula">B ∝ 1/r</div>
+            
+            <div class="checklist">
+                <p>✓ r adalah Jarak dalam meter</p>
+                <p>✓ Semakin jauh jarak, semakin lemah medan magnet</p>
+                <p>✓ Hubungan berbanding terbalik mengikuti hukum Biot-Savart</p>
+            </div>
+            
+            <p>Jarak sangat mempengaruhi kekuatan medan magnet. Pada jarak yang lebih dekat dengan kawat berarus, medan magnet akan lebih kuat, dan pada jarak yang lebih jauh, medan magnet akan semakin lemah.</p>
+        </div>
+        
+        <button class="close-btn">Tutup</button>
+    </div>
+</div>
+</body>
+</html>
