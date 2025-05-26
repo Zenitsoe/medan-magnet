@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FISDAS - Simulasi Medan Magnet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: white;
+        }
+        
+        .light-mode {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5);
+        }
+        
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .input-row-three {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 1rem;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .result-display {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border-left: 4px solid #3b82f6;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .formula-info {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .formula-info h3 {
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        
+        .formula-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+        
+        .formula-info code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .input-row,
+            .input-row-three {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>FISDAS</h1>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="kelompok.html">Kelompok</a>
+            <a href="hitung.html">Hitung</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="main-title">Rumus Hambatan Medan Magnet</h1>
+        
+        <div class="calculator-card">
+            <div class="form-group">
+                <label for="calculationType">Pilih Jenis Perhitungan:</label>
+                <select id="calculationType" onchange="changeCalculation()">
+                    <option value="solenoid">Medan Magnet di Sekitar Solenoid</option>
+                    <option value="force">Gaya Magnet pada Muatan Bergerak</option>
+                    <option value="torque">Momen Gaya (Torsi)</option>
+                </select>
+            </div>
+            
+            <!-- Medan Magnet Solenoid -->
+            <div id="solenoidCalc" class="calculation-section">
+                <div class="formula-info">
+                    <h3>Medan Magnet di Sekitar Solenoid</h3>
+                    <p>Rumus: <code>B = μ₀ × n × I</code></p>
+                    <p>Dimana:</p>
+                    <p>• B = Medan magnet (Tesla)</p>
+                    <p>• μ₀ = Permeabilitas vakum (4π × 10⁻⁷ H/m)</p>
+                    <p>• n = Jumlah lilitan per satuan panjang (lilitan/m)</p>
+                    <p>• I = Arus listrik (Ampere)</p>
+                </div>
+                
+                <div class="input-row">
+                    <div class="form-group">
+                        <label for="solenoidTurns">Jumlah lilitan (N):</label>
+                        <input type="number" id="solenoidTurns" step="any" placeholder="Masukkan jumlah lilitan">
+                    </div>
+                    <div class="form-group">
+                        <label for="solenoidLength">Panjang solenoid (m):</label>
+                        <input type="number" id="solenoidLength" step="any" placeholder="Masukkan panjang">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="solenoidCurrent">Arus listrik I (A):</label>
+                    <input type="number" id="solenoidCurrent" step="any" placeholder="Masukkan arus listrik">
+                </div>
+            </div>
+            
+            <!-- Gaya Magnet -->
+            <div id="forceCalc" class="calculation-section hidden">
+                <div class="formula-info">
+                    <h3>Gaya Magnet pada Muatan Bergerak</h3>
+                    <p>Rumus: <code>F = q × v × B × sin(θ)</code></p>
+                    <p>Dimana:</p>
+                    <p>• F = Gaya magnet (Newton)</p>
+                    <p>• q = Muatan listrik (Coulomb)</p>
+                    <p>• v = Kecepatan muatan (m/s)</p>
+                    <p>• B = Medan magnet (Tesla)</p>
+                    <p>• θ = Sudut antara v dan B (derajat)</p>
+                </div>
+                
+                <div class="input-row">
+                    <div class="form-group">
+                        <label for="charge">Muatan q (C):</label>
+                        <input type="number" id="charge" step="any" placeholder="Masukkan muatan">
+                    </div>
+                    <div class="form-group">
+                        <label for="velocity">Kecepatan v (m/s):</label>
+                        <input type="number" id="velocity" step="any" placeholder="Masukkan kecepatan">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="form-group">
+                        <label for="magneticField">Medan magnet B (T):</label>
+                        <input type="number" id="magneticField" step="any" placeholder="Masukkan medan magnet">
+                    </div>
+                    <div class="form-group">
+                        <label for="angle">Sudut θ (derajat):</label>
+                        <input type="number" id="angle" step="any" placeholder="Masukkan sudut">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Momen Gaya -->
+            <div id="torqueCalc" class="calculation-section hidden">
+                <div class="formula-info">
+                    <h3>Momen Gaya (Torsi)</h3>
+                    <p>Rumus: <code>τ = F × r × sin(θ)</code></p>
+                    <p>Dimana:</p>
+                    <p>• τ = Momen gaya/torsi (N⋅m)</p>
+                    <p>• F = Gaya (Newton)</p>
+                    <p>• r = Jarak dari sumbu rotasi (meter)</p>
+                    <p>• θ = Sudut antara F dan r (derajat)</p>
+                </div>
+                
+                <div class="input-row-three">
+                    <div class="form-group">
+                        <label for="force">Gaya F (N):</label>
+                        <input type="number" id="force" step="any" placeholder="Masukkan gaya">
+                    </div>
+                    <div class="form-group">
+                        <label for="radius">Jarak r (m):</label>
+                        <input type="number" id="radius" step="any" placeholder="Masukkan jarak">
+                    </div>
+                    <div class="form-group">
+                        <label for="torqueAngle">Sudut θ (derajat):</label>
+                        <input type="number" id="torqueAngle" step="any" placeholder="Masukkan sudut">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculate()">Hitung</button>
+            
+            <div id="result" class="result-display hidden">
+                <div id="resultText"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function changeCalculation() {
+            const type = document.getElementById('calculationType').value;
+            
+            // Hide all sections
+            document.getElementById('solenoidCalc').classList.add('hidden');
+            document.getElementById('forceCalc').classList.add('hidden');
+            document.getElementById('torqueCalc').classList.add('hidden');
+            
+            // Show selected section
+            document.getElementById(type + 'Calc').classList.remove('hidden');
+            
+            // Hide result
+            document.getElementById('result').classList.add('hidden');
+        }
+        
+        function calculate() {
+            const type = document.getElementById('calculationType').value;
+            let result = '';
+            
+            try {
+                switch(type) {
+                    case 'solenoid':
+                        result = calculateSolenoid();
+                        break;
+                    case 'force':
+                        result = calculateForce();
+                        break;
+                    case 'torque':
+                        result = calculateTorque();
+                        break;
+                }
+                
+                document.getElementById('resultText').innerHTML = result;
+                document.getElementById('result').classList.remove('hidden');
+            } catch (error) {
+                alert('Mohon periksa kembali input Anda. Pastikan semua field terisi dengan benar.');
+            }
+        }
+        
+        function calculateSolenoid() {
+            const N = parseFloat(document.getElementById('solenoidTurns').value);
+            const L = parseFloat(document.getElementById('solenoidLength').value);
+            const I = parseFloat(document.getElementById('solenoidCurrent').value);
+            
+            if (isNaN(N) || isNaN(L) || isNaN(I) || L === 0) {
+                throw new Error('Invalid input');
+            }
+            
+            const mu0 = 4 * Math.PI * 1e-7; // Permeabilitas vakum
+            const n = N / L; // Jumlah lilitan per satuan panjang
+            const B = mu0 * n * I;
+            
+            return `
+                <strong>Hasil Perhitungan Medan Magnet Solenoid:</strong><br><br>
+                Diketahui:<br>
+                • Jumlah lilitan (N) = ${N} lilitan<br>
+                • Panjang solenoid (L) = ${L} m<br>
+                • Arus listrik (I) = ${I} A<br>
+                • Permeabilitas vakum (μ₀) = 4π × 10⁻⁷ H/m<br><br>
+                Perhitungan:<br>
+                • n = N/L = ${N}/${L} = ${n.toFixed(2)} lilitan/m<br>
+                • B = μ₀ × n × I<br>
+                • B = ${mu0.toExponential(2)} × ${n.toFixed(2)} × ${I}<br>
+                • <strong>B = ${B.toExponential(4)} Tesla</strong>
+            `;
+        }
+        
+        function calculateForce() {
+            const q = parseFloat(document.getElementById('charge').value);
+            const v = parseFloat(document.getElementById('velocity').value);
+            const B = parseFloat(document.getElementById('magneticField').value);
+            const theta = parseFloat(document.getElementById('angle').value);
+            
+            if (isNaN(q) || isNaN(v) || isNaN(B) || isNaN(theta)) {
+                throw new Error('Invalid input');
+            }
+            
+            const thetaRad = theta * Math.PI / 180; // Konversi ke radian
+            const F = q * v * B * Math.sin(thetaRad);
+            
+            return `
+                <strong>Hasil Perhitungan Gaya Magnet:</strong><br><br>
+                Diketahui:<br>
+                • Muatan (q) = ${q} C<br>
+                • Kecepatan (v) = ${v} m/s<br>
+                • Medan magnet (B) = ${B} T<br>
+                • Sudut (θ) = ${theta}°<br><br>
+                Perhitungan:<br>
+                • F = q × v × B × sin(θ)<br>
+                • F = ${q} × ${v} × ${B} × sin(${theta}°)<br>
+                • F = ${q} × ${v} × ${B} × ${Math.sin(thetaRad).toFixed(4)}<br>
+                • <strong>F = ${F.toFixed(6)} Newton</strong>
+            `;
+        }
+        
+        function calculateTorque() {
+            const F = parseFloat(document.getElementById('force').value);
+            const r = parseFloat(document.getElementById('radius').value);
+            const theta = parseFloat(document.getElementById('torqueAngle').value);
+            
+            if (isNaN(F) || isNaN(r) || isNaN(theta)) {
+                throw new Error('Invalid input');
+            }
+            
+            const thetaRad = theta * Math.PI / 180; // Konversi ke radian
+            const torque = F * r * Math.sin(thetaRad);
+            
+            return `
+                <strong>Hasil Perhitungan Momen Gaya (Torsi):</strong><br><br>
+                Diketahui:<br>
+                • Gaya (F) = ${F} N<br>
+                • Jarak (r) = ${r} m<br>
+                • Sudut (θ) = ${theta}°<br><br>
+                Perhitungan:<br>
+                • τ = F × r × sin(θ)<br>
+                • τ = ${F} × ${r} × sin(${theta}°)<br>
+                • τ = ${F} × ${r} × ${Math.sin(thetaRad).toFixed(4)}<br>
+                • <strong>τ = ${torque.toFixed(6)} N⋅m</strong>
+            `;
+        }
+    </script>
+</body>
+</html>
