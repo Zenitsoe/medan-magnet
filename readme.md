@@ -1,4 +1,3 @@
-#medan magnet
 ```markdown
 # Proyek Medan Magnet - FISDAS
 
