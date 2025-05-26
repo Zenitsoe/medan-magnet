@@ -10,12 +10,12 @@ Proyek "FISDAS - Medan Magnet" ini adalah sebuah _tool_ berbasis web interaktif 
 
 * **Halaman Utama Interaktif:** Tampilan awalnya (`index.html`) dibuat cakep dengan animasi medan magnet dinamis pake `particles.js`.
 * **Kalkulator Medan Magnet (`hitung.html`):**
-    * **Medan Magnet Solenoida:** Bisa ngitung $B = \mu_0 \cdot n \cdot I$.
-    * **Gaya Magnet pada Muatan Bergerak (Gaya Lorentz):** Bisa ngitung $F = q \cdot v \cdot B \cdot \sin(\theta)$.
-    * **Momen Gaya (Torsi):** Bisa ngitung $\tau = F \cdot r \cdot \sin(\theta)$.
+    * **Medan Magnet Solenoida:** 
+    * **Gaya Magnet pada Muatan Bergerak (Gaya Lorentz):** 
+    * **Momen Gaya (Torsi):** 
     * Setiap kalkulator nampilin rumus, definisi variabelnya, terus kita bisa masukin nilainya buat liat hasilnya.
 * **Halaman Simulasi dan Penjelasan (`simulation.html`):**
-    * **Kalkulator Interaktif:** Buat ngitung medan magnet dari kawat lurus panjang ($B = (\mu_0 \cdot I) / (2\pi \cdot r)$).
+    * **Kalkulator Interaktif:** Buat ngitung medan magnet dari kawat lurus panjang 
     * **Penjelasan Detail:** Ada _pop-up modal_ yang ngasih info lengkap soal konsep-konsep kunci kayak:
         * Medan Magnet (B)
         * Arus Listrik (I)
