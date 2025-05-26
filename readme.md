@@ -60,13 +60,13 @@ Proyek "FISDAS - Medan Magnet" ini adalah sebuah _tool_ berbasis web interaktif 
 ## Konsep Kunci yang Dibahas
 
 * **Medan Magnet (B):** Satuannya Tesla (T). Besaran vektor yang nunjukin kekuatan sama arah medan magnet.
-* **Permeabilitas Ruang Hampa ($\mu_0$):** Nilai konstanta $4\pi \times 10^{-7} \, \text{T}\cdot\text{m/A}$ atau H/m.
+* **Permeabilitas Ruang Hampa :** 
 * **Arus Listrik (I):** Aliran muatan listrik, satuannya Ampere (A). Jadi sumber medan magnet.
 * **Jarak (r):** Jarak dari sumber arus ke titik pengukuran medan magnet, satuannya meter (m).
 * **Solenoida:** Perhitungan medan magnet di dalem solenoida berdasarkan jumlah lilitan per satuan panjang (n) sama arusnya (I).
-* **Gaya Magnet (F) / Gaya Lorentz:** Gaya yang dialami muatan (q) yang gerak dengan kecepatan (v) di dalem medan magnet (B). Dihitung pake rumus $F = q \cdot v \cdot B \cdot \sin(\theta)$. Satuannya Newton (N).
-* **Momen Gaya / Torsi ($\tau$):** Gaya putar, dihitung pake $\tau = F \cdot r \cdot \sin(\theta)$. Satuannya Newton-meter (N·m).
-* **Sudut ($\theta$):** Sudut antara vektor-vektor yang relevan (misalnya, antara kecepatan sama medan magnet, atau gaya sama lengan momen).
+* **Gaya Magnet (F) / Gaya Lorentz:** Gaya yang dialami muatan (q) yang gerak dengan kecepatan (v) di dalem medan magnet (B). Satuannya Newton (N).
+* **Momen Gaya / Torsi :** Gaya putar,Satuannya Newton-meter (N·m).
+* **Sudut :** Sudut antara vektor-vektor yang relevan (misalnya, antara kecepatan sama medan magnet, atau gaya sama lengan momen).
 * **Hukum Biot-Savart:** Secara implisit dipake buat rumus medan magnet di sekitar kawat lurus.
 * **Kaidah Tangan Kanan:** Disebutin buat nentuin arah medan magnet di sekitar kawat berarus.
 
