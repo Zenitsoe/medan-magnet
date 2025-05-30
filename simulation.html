@@ -4,12 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FISDAS - Simulasi Medan Magnet</title>
-    <link rel="stylesheet" href="style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #b01eff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(123, 66, 246, 0.3);
+        }
+
+        /* Main Content */
         .content-container {
             padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
 
         .section-title {
@@ -21,12 +68,20 @@
             gap: 0.5rem;
         }
 
+        .subtitle {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Explanation Section */
         .explanation {
-            background-color: rgba(30, 30, 50, 0.7);
+            background: rgba(30, 30, 50, 0.7);
             border-radius: 15px;
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .explanation p {
@@ -35,20 +90,32 @@
             margin-bottom: 1rem;
         }
 
+        .explanation a {
+            color: #b01eff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .explanation a:hover {
+            color: #7b42f6;
+        }
+
+        /* Concept Cards */
         .key-concept {
-            margin-top: 1rem;
-            margin-bottom: 2rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .concept-card {
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .concept-card:hover {
@@ -69,30 +136,32 @@
         .concept-card p {
             color: #ccc;
             line-height: 1.6;
+            margin-bottom: 1rem;
         }
 
         .see-more {
             display: inline-block;
-            margin-top: 1rem;
             color: #7b42f6;
             text-decoration: none;
             padding: 0.5rem 1rem;
             border-radius: 20px;
-            background-color: rgba(123, 66, 246, 0.1);
-            transition: background-color 0.3s ease;
+            background: rgba(123, 66, 246, 0.1);
+            transition: all 0.3s ease;
             cursor: pointer;
+            border: 1px solid rgba(123, 66, 246, 0.3);
         }
 
         .see-more:hover {
-            background-color: rgba(123, 66, 246, 0.2);
+            background: rgba(123, 66, 246, 0.2);
+            transform: translateY(-2px);
         }
 
-        /* Calculator area */
+        /* Calculator */
         .calculator-container {
-            background-color: rgba(30, 30, 50, 0.7);
+            background: rgba(30, 30, 50, 0.7);
             border-radius: 15px;
             padding: 2rem;
-            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
         }
 
         .calculator-form {
@@ -110,15 +179,22 @@
 
         .input-group label {
             color: #ccc;
+            font-weight: 500;
         }
 
         .input-group input {
             padding: 0.8rem;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: #fff;
             font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #7b42f6;
         }
 
         .calculate-btn {
@@ -129,7 +205,7 @@
             padding: 0.8rem 2rem;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
             margin-top: 1rem;
         }
 
@@ -139,7 +215,7 @@
         }
 
         .result {
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
             padding: 1.5rem;
             margin-top: 1.5rem;
@@ -153,6 +229,8 @@
             font-weight: bold;
             color: #7b42f6;
         }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -162,28 +240,33 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         .modal-content {
-            background-color: #1e1e32;
+            background: linear-gradient(135deg, #1e1e32 0%, #2a2a4a 100%);
             margin: 5% auto;
-            padding: 20px;
+            padding: 2rem;
             border-radius: 15px;
-            width: 80%;
+            width: 90%;
             max-width: 700px;
             box-shadow: 0 5px 30px rgba(123, 66, 246, 0.3);
             position: relative;
             animation: slideDown 0.4s ease;
         }
+
         @keyframes slideDown {
             from { transform: translateY(-30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
         .close {
             color: #aaa;
             float: right;
@@ -191,32 +274,48 @@
             font-weight: bold;
             cursor: pointer;
             transition: color 0.3s ease;
+            line-height: 1;
         }
+
         .close:hover {
             color: #fff;
         }
+
         .modal h2 {
             color: #fff;
             margin-top: 0;
-            display: flex;
-            align-items: center;
+            margin-bottom: 1rem;
             font-size: 1.8rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 10px;
+            clear: both;
         }
+
         .modal-image {
             display: block;
             margin: 1rem auto;
             border-radius: 10px;
             max-width: 100%;
-            height: auto;
+            height: 200px;
+            background: linear-gradient(45deg, #7b42f6, #b01eff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
         }
+
         .modal-info {
             color: #ccc;
             line-height: 1.6;
         }
+
+        .modal-info p {
+            margin-bottom: 1rem;
+        }
+
         .formula {
-            background-color: rgba(123, 66, 246, 0.2);
+            background: rgba(123, 66, 246, 0.2);
             padding: 15px;
             margin: 15px 0;
             border-radius: 10px;
@@ -224,16 +323,22 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #b01eff;
+            border: 1px solid rgba(123, 66, 246, 0.3);
         }
+
         .checklist {
-            background-color: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .checklist p {
             margin: 8px 0;
+            color: #ccc;
         }
+
         .close-btn {
             display: block;
             width: 100%;
@@ -245,17 +350,46 @@
             font-size: 1.1rem;
             cursor: pointer;
             margin-top: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
+
         .close-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(123, 66, 246, 0.3);
         }
-        
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .content-container {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .calculator-form {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    
     <nav class="navbar">
         <div class="logo">FISDAS</div>
         <div class="nav-links">
@@ -266,19 +400,17 @@
     </nav>
 
     <div class="content-container">
-        <div id="particles-js"></div>
-
         <h1 class="section-title">
             <span style="color: #b01eff;">ᗰ</span> Simulasi Medan Magnet
         </h1>
-        <p>Belajar Fisika Lebih Seru dengan Visual & Interaktif</p>
+        <p class="subtitle">Belajar Fisika Lebih Seru dengan Visual & Interaktif</p>
 
         <div class="explanation">
             <h2 class="section-title" style="font-size: 1.5rem;">
                 <span style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; background-color: #4e73df; border-radius: 50%; font-size: 1rem; margin-right: 0.5rem;">i</span>
                 Penjelasan Singkat
             </h2>
-            <p>Dalam fisika, <a href="#" class="open-modal" data-modal="modalMedanMagnet" style="color: #b01eff; text-decoration: none;">medan magnet (B)</a> adalah kuantitas fisika yang menghasilkan gaya pada benda bermuatan yang bergerak dan pada arus listrik. Medan magnet muncul di sekitar bahan magnetik dan konduktor yang dialiri listrik. Secara matematis, medan magnet dirumuskan sebagai: <strong>B = μI / (2πr)</strong> untuk kawat lurus panjang.</p>
+            <p>Dalam fisika, <a class="open-modal" data-modal="modalMedanMagnet">medan magnet (B)</a> adalah kuantitas fisika yang menghasilkan gaya pada benda bermuatan yang bergerak dan pada arus listrik. Medan magnet muncul di sekitar bahan magnetik dan konduktor yang dialiri listrik. Secara matematis, medan magnet dirumuskan sebagai: <strong>B = μI / (2πr)</strong> untuk kawat lurus panjang.</p>
             <p>Website ini membantu kita memahami konsep ini melalui penjelasan dan simulasi langsung.</p>
         </div>
 
@@ -318,11 +450,11 @@
             <div class="calculator-form">
                 <div class="input-group">
                     <label for="current">Arus Listrik (I) dalam Ampere</label>
-                    <input type="number" id="current" value="-" min="0" step="0.1">
+                    <input type="number" id="current" placeholder="Masukkan nilai arus" min="0" step="0.1">
                 </div>
                 <div class="input-group">
                     <label for="distance">Jarak (r) dalam meter</label>
-                    <input type="number" id="distance" value="-" min="0.01" step="0.01">
+                    <input type="number" id="distance" placeholder="Masukkan nilai jarak" min="0.01" step="0.01">
                 </div>
             </div>
             
@@ -330,7 +462,7 @@
             
             <div class="result">
                 <span>Kuat Medan Magnet:</span>
-                <span class="result-value" id="resultValue">B = Tesla</span>
+                <span class="result-value" id="resultValue">B = - Tesla</span>
             </div>
         </div>
     </div>
@@ -338,14 +470,14 @@
     <!-- Modal Medan Magnet -->
     <div id="modalMedanMagnet" class="modal">
         <div class="modal-content">
+            <div>
             <span class="close">&times;</span>
             <h2>Medan Magnet (Tesla)</h2>
-            <img src="/api/placeholder/400/320" alt="Medan Magnet Ilustrasi" class="modal-image">
-            
-            <div class="modal-info">
+            <img src="magnet.jpg" alt="Medan Magnet Ilustrasi" class="modal-image"
+            class="modal-info">
                 <p>🧲 Medan magnet adalah daerah di sekitar magnet atau arus listrik yang dapat menimbulkan gaya pada benda bermuatan yang bergerak atau pada arus listrik lain.</p>
                 
-                <p>Dalam hukum Biot-Savart, medan magnet dilambaangkan sebagai huruf <strong>B</strong> dan punya satuan <strong>Tesla (T)</strong>. Rumus untuk mencari medan magnet pada kawat lurus:</p>
+                <p>Dalam hukum Biot-Savart, medan magnet dilambangkan sebagai huruf <strong>B</strong> dan punya satuan <strong>Tesla (T)</strong>. Rumus untuk mencari medan magnet pada kawat lurus:</p>
                 
                 <div class="formula">B = (μ₀ × I) / (2π × r)</div>
                 
@@ -366,11 +498,12 @@
     <!-- Modal Arus Listrik -->
     <div id="modalArusListrik" class="modal">
         <div class="modal-content">
+            <div>
             <span class="close">&times;</span>
             <h2>Arus Listrik (Ampere)</h2>
-            <img src="/api/placeholder/400/320" alt="Arus Listrik Ilustrasi" class="modal-image">
+            <img src="kelistrikan.jpg" alt="Arus Listrik Ilustrasi" class="modal-image"
             
-            <div class="modal-info">
+            class="modal-info">
                 <p>⚡ Arus listrik adalah aliran muatan listrik (elektron) yang mengalir melalui suatu penghantar.</p>
                 
                 <p>Dalam hukum Biot-Savart, arus listrik dilambangkan sebagai huruf <strong>I</strong> dan punya satuan <strong>Ampere (A)</strong>. Arus listrik menghasilkan medan magnet di sekitarnya:</p>
@@ -395,7 +528,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Jarak (meter)</h2>
-            <img src="/api/placeholder/400/320" alt="Jarak Ilustrasi" class="modal-image">
+            <div class="modal-image">📏</div>
             
             <div class="modal-info">
                 <p>📏 Jarak adalah ukuran spasial antara dua titik, dalam hal ini jarak dari kawat berarus ke titik pengamatan medan magnet.</p>
@@ -417,156 +550,86 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        
         // Calculator functionality
-        const currentInput = document.getElementById('current');
-        const distanceInput = document.getElementById('distance');
-        const calculateButton = document.getElementById('calculateField');
-        const resultValue = document.getElementById('resultValue');
-        
-        calculateButton.addEventListener('click', function() {
-            const current = parseFloat(currentInput.value);
-            const distance = parseFloat(distanceInput.value);
-            const mu = 4 * Math.PI * 1e-7; // Permeabilitas ruang hampa
+        function initializeCalculator() {
+            const currentInput = document.getElementById('current');
+            const distanceInput = document.getElementById('distance');
+            const calculateButton = document.getElementById('calculateField');
+            const resultValue = document.getElementById('resultValue');
             
-            if (isNaN(current) || isNaN(distance) || distance <= 0 || current < 0) {
-                alert('Masukkan nilai yang valid untuk arus dan jarak.');
-                return;
-            }
-            
-            const B = (mu * current) / (2 * Math.PI * distance);
-            resultValue.textContent = `B = ${B.toExponential(6)} Tesla`;
-        });
+            calculateButton.addEventListener('click', function() {
+                const current = parseFloat(currentInput.value);
+                const distance = parseFloat(distanceInput.value);
+                const mu = 4 * Math.PI * 1e-7; // Permeabilitas ruang hampa
+                
+                if (isNaN(current) || isNaN(distance) || distance <= 0 || current < 0) {
+                    alert('Masukkan nilai yang valid untuk arus dan jarak.');
+                    return;
+                }
+                
+                const B = (mu * current) / (2 * Math.PI * distance);
+                resultValue.textContent = `B = ${B.toExponential(6)} Tesla`;
+            });
+        }
         
         // Modal functionality
-        const modals = document.querySelectorAll('.modal');
-        const seeMoreButtons = document.querySelectorAll('.see-more, .open-modal');
-        const closeButtons = document.querySelectorAll('.close, .close-btn');
-        
-        // Open modal when clicking "Lihat Penjelasan Lengkap"
-        seeMoreButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const modalId = this.getAttribute('data-modal');
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.style.display = 'block';
-                }
+        function initializeModals() {
+            const modals = document.querySelectorAll('.modal');
+            const openButtons = document.querySelectorAll('.see-more, .open-modal');
+            const closeButtons = document.querySelectorAll('.close, .close-btn');
+            
+            // Open modal when clicking "Lihat Penjelasan Lengkap" or text links
+            openButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const modalId = this.getAttribute('data-modal');
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                    }
+                });
             });
-        });
-        
-        // Close modal when clicking X button or "Tutup" button
-        closeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const modal = this.closest('.modal');
-                if (modal) {
-                    modal.style.display = 'none';
-                }
+            
+            // Close modal when clicking X button or "Tutup" button
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto'; // Restore scrolling
+                    }
+                });
             });
-        });
-        
-        // Close modal when clicking outside of it
-        window.addEventListener('click', function(event) {
+            
+            // Close modal when clicking outside of it
             modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto'; // Restore scrolling
+                    }
+                });
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const openModal = document.querySelector('.modal[style*="block"]');
+                    if (openModal) {
+                        openModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
                 }
             });
-        });
+        }
         
-        // Initialize particles.js
-        window.addEventListener('load', function() {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 30,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": ["#7b42f6", "#b01eff", "#4e73df"]
-                    },
-                    "shape": {
-                        "type": "circle",
-                        "stroke": {
-                            "width": 0,
-                            "color": "#000000"
-                        },
-                    },
-                    "opacity": {
-                        "value": 0.3,
-                        "random": true,
-                        "anim": {
-                            "enable": true,
-                            "speed": 1,
-                            "opacity_min": 0.1,
-                            "sync": false
-                        }
-                    },
-                    "size": {
-                        "value": 3,
-                        "random": true,
-                        "anim": {
-                            "enable": true,
-                            "speed": 2,
-                            "size_min": 0.1,
-                            "sync": false
-                        }
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#7b42f6",
-                        "opacity": 0.2,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 1,
-                        "direction": "none",
-                        "random": true,
-                        "straight": false,
-                        "out_mode": "out",
-                        "bounce": false,
-                        "attract": {
-                            "enable": true,
-                            "rotateX": 600,
-                            "rotateY": 1200
-                        }
-                    }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "grab"
-                        },
-                        "onclick": {
-                            "enable": true,
-                            "mode": "push"
-                        },
-                        "resize": true
-                    },
-                    "modes": {
-                        "grab": {
-                            "distance": 140,
-                            "line_linked": {
-                                "opacity": 0.5
-                            }
-                        },
-                        "push": {
-                            "particles_nb": 4
-                        }
-                    }
-                },
-                "retina_detect": true
-            });
+        // Initialize all functionality when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalculator();
+            initializeModals();
         });
     </script>
-    
 </body>
 </html>
